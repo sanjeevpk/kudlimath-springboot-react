@@ -16,6 +16,7 @@
 
 package com.sansys.kudlimathspringbootreact.controllers;
 
+import java.util.Map;
 import javax.naming.directory.InvalidAttributesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sansys.kudlimathspringbootreact.models.DonateesModel;
+import com.sansys.kudlimathspringbootreact.pojos.OtsTransaction;
 import com.sansys.kudlimathspringbootreact.services.DonateesService;
 import jakarta.validation.Valid;
 
@@ -48,5 +50,24 @@ public class DonationController {
     LOG.info("/donation API is called");
     return new ResponseEntity<>(donateesService.donate(donateesModel), HttpStatus.CREATED);
   } 
+  
+  @RequestMapping("/donation-status")
+  public String verifyPaymentStatus(@RequestBody OtsTransaction request){
+    LOG.info("API /donation-status is called");
+    return donateesService.verifyPaymentStatus(request);
+  }
+  
+  @PostMapping("/donation-status1")
+  public String verifyPaymentStatus(@RequestBody String request){
+    LOG.info("API /donation-status is called");
+    return null;
+//    return donateesService.verifyPaymentStatus(request);
+  }
+  
+  @PostMapping("/signature")
+  public ResponseEntity<?> getSignature(@RequestBody Map<String, Object> request){
+    LOG.info("API /signature is called");
+    return new ResponseEntity<>(donateesService.getSignature(request), HttpStatus.OK);
+  }
   
 }

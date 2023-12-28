@@ -44,6 +44,7 @@ import com.sansys.kudlimathspringbootreact.pojos.PayDetails;
 import com.sansys.kudlimathspringbootreact.pojos.PayInstrument;
 import com.sansys.kudlimathspringbootreact.pojos.ServerResponse;
 import com.sansys.kudlimathspringbootreact.repositories.DonateesRepository;
+import com.sansys.kudlimathspringbootreact.utils.AtomSignature;
 import com.sansys.kudlimathspringbootreact.utils.AuthEncryptionAndDecryption;
 
 /**
@@ -67,9 +68,12 @@ public class DonateesService {
   @Value("${app.const.authDecryptionKey}")
   private String authDecryptionKey;
   
+  @Value("${app.const.signatureRequestHashKey}")
+  private String signatureRequestHashKey;
+  
   @Autowired
   private DonateesRepository donateesRepository;
-  
+   
   /**
    * @param donate
    * @return
@@ -160,7 +164,7 @@ public class DonateesService {
     
     LOG.info("Merchant Id = {}", merchantId);
 
-    String merchantTxnId = merchantId;
+    String merchantTxnId = UUID.randomUUID().toString();
 
     System.out.println("MerchantId------: " + merchantId);
     System.out.println("Amount----------: " + donateModel.getAmount());
@@ -169,9 +173,9 @@ public class DonateesService {
 
     MerchDetails merchDetails = new MerchDetails();
     merchDetails.setMerchId(merchantId);
-    merchDetails.setMerchTxnId(UUID.randomUUID().toString());
+    merchDetails.setMerchTxnId(merchantTxnId);
     merchDetails.setUserId("");//Not to map
-    merchDetails.setPassword("Test@123");
+    merchDetails.setPassword("320bda5e");
     DateTimeFormatter myFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     LocalDateTime date = LocalDateTime.now();
     String dateFormat = myFormat.format(date);
@@ -182,10 +186,10 @@ public class DonateesService {
     payDetails.setCustAccNo("213232323");//Any int values
     payDetails.setTxnCurrency("INR");
 
-    payDetails.setProduct("NSE");
+    payDetails.setProduct("TRUST");
     CustDetails custDetails = new CustDetails();
-    custDetails.setCustEmail("suraj.chavan@atomtech.in");
-    custDetails.setCustMobile("1234567890");
+    custDetails.setCustEmail("sanjeev.pk@gmail.com");
+    custDetails.setCustMobile("8217794996");
 
     HeadDetails headDetails = new HeadDetails();
     headDetails.setApi("AUTH");
@@ -356,6 +360,69 @@ public class DonateesService {
     response.put("response", decryptedData);
     LOG.info("ready for redirect to UI");
     return response;
+  }
+
+
+  /**
+   * @param request
+   * @return
+   */
+  public String verifyPaymentStatus(OtsTransaction request) {
+    String encryptedData = "";
+    String decryptedData = "";
+    String serverResp = "";
+    String decryptResponse = "";
+    
+    if(request != null && request.getPayInstrument().getPayDetails()!= null) {
+//      if(request.get("merchDetails") != null && request.get("payDetails") != null) {
+        
+        try {
+          encryptedData = AuthEncryptionAndDecryption.getAuthEncrypted(request.toString(), authEncryptionKey);
+          System.out.println("EncryptedData------: " + encryptedData);
+
+          serverResp = AipayService.getTransactionStatus(merchantId, encryptedData);
+          System.out.println("serverResp Result------: " + serverResp);
+          System.out.println("serverResp Length------: " + serverResp.length());
+          System.out.println("serverResp Condition---: " + serverResp.startsWith("merchId"));
+
+          if ((serverResp != null) ) {
+              decryptResponse = serverResp.split("\\&merchId=")[0].split("=")[1];
+              System.out.println("serrResp---: " + decryptResponse);
+
+              decryptedData = AuthEncryptionAndDecryption.getAuthDecrypted(decryptResponse, authDecryptionKey);
+              System.out.println("DecryptedData------: " + decryptedData);
+
+//              ServerResponse serverResponse = new ServerResponse();
+//              serverResponse = (ServerResponse) gson.fromJson(decryptedData, ServerResponse.class);
+//
+//              String atomTokenId = serverResponse.getAtomTokenId();
+//              System.out.println("serverResponse-----: " + serverResponse);
+//              System.out.println("TokenId------------: " + atomTokenId);
+          }
+        }catch(Exception e) {
+          LOG.error("Error occurred verifyPaymentStatus()", e);
+        }
+      }
+//    }
+    return decryptedData;
+  }
+
+
+  /**
+   * @param request
+   * @return
+   */
+  public Map<String, Object> getSignature(Map<String, Object> request) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    String input = (String) map.get("merchID") +
+        map.get("merchTxnID") + 
+        map.get("amount") + 
+        map.get("txnCurrency");
+    LOG.info("Input for signature = {}", input);
+    
+    String output = AtomSignature.generateSignature(signatureRequestHashKey, input);
+    map.put("signature", output);
+    return map;
   }
 
 }

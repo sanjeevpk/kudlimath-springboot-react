@@ -51,11 +51,28 @@ spring:
 
 app:
   const:
-    merchantId : 317157
+    merchantId : 551670
+    #AIPAY_URL : https://paynetzuat.atomtech.in/ots/aipay/auth?
+    AIPAY_URL : https://payment1.atomtech.in/ots/aipay/auth?
     returnURL : https://www.kudlimath.in/api/v1/donation/response
     redirectURL : https://www.kudlimath.in
-    authEncryptionKey : A4476C2062FFA58980DC8F79EB6A799E
-    authDecryptionKey : 75AEF0FA1B94B3C10D4F5B268F757F11
-    
+    #returnURL : http://localhost:8080/api/v1/donation/response
+    #redirectURL : http://localhost:8080
+    authEncryptionKey : 026F40639DF005B044E9525B1221EC01
+    authDecryptionKey : 9CEF22EF8B247B977AB14F3CF6151A7C
+    signatureRequestHashKey : a10337706d512b2473
+---
 
+logging:
+  level:
+    web: INFO
+    org.springframework.web: INFO
+    com.sansys: DEBUG
+    org.hibernate: ERROR
+---
+
+spring:
+  output:
+    ansi:
+      enabled: DETECT
   

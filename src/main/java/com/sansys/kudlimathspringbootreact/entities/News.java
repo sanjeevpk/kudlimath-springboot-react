@@ -9,20 +9,21 @@
  *
  * @author - Sanjeev
  * @version - 1.0
- * @CreatedOn - 17-Aug-2023 11:25:13 pm
+ * @CreatedOn - 29-Sept-2023 12:52:39 am
  * @Usage - 
  *
  */
 
-package com.sansys.kudlimathspringbootreact.models;
+package com.sansys.kudlimathspringbootreact.entities;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,29 +31,27 @@ import lombok.NoArgsConstructor;
 /**
  * 
  */
-@Data
+
+@Entity
+@Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class DonateesModel {
-  
+@Data
+public class News {
+    
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+    
+  private String title;
   
-  @NotBlank
-  private String name;
+  private String description;
   
-  @Pattern(regexp = "(0/91)?[7-9][0-9]{9}")
-  private String mobile;
+  private List<String> labels;
   
-  @Email
-  private String email;
+  private String createdBy;
   
-  @Min(value = 1)
-  @Max(value = 100000)
-  private BigDecimal amount;
+  @Column(name = "date_time", columnDefinition = "TIMESTAMP")
+  private LocalDateTime creationDateTime;
   
-  private String atomTokenId;
-  private String merchantTnxId;
-  private LocalDateTime dateTime;
-  private String returnUrl;
-  private String merchantId;
 }

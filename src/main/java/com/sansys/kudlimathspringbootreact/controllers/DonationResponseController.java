@@ -17,16 +17,24 @@
 package com.sansys.kudlimathspringbootreact.controllers;
 
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.sansys.kudlimathspringbootreact.models.PayInstrument;
 import com.sansys.kudlimathspringbootreact.services.DonateesService;
 
 /**
@@ -38,31 +46,29 @@ import com.sansys.kudlimathspringbootreact.services.DonateesService;
 @RequestMapping("/api/v1")
 public class DonationResponseController {
   
+  private static final Logger LOG = LoggerFactory.getLogger(DonationController.class);
+  
   @Autowired
   private DonateesService donateesService;
   
   @Value("${app.const.redirectURL}")
   private String redirectURL;
+      
+  @RequestMapping(value = "/donation/response", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+  public RedirectView fetchDonationResponse(String encData, ModelAndView model) throws JsonMappingException, JsonProcessingException{
+    LOG.info("API /donation/response is called");
+    Map<?, ?> response = donateesService.fetchDonationResponse(encData);
+    LOG.info("Received the fetchDonationResponse() from service");
     
-//    @RequestMapping(value = "/donation/response", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-//    public RedirectView fetchDonationResponse(String encData, RedirectAttributes attributes) throws JsonMappingException, JsonProcessingException{
-//      Map<?, ?> response = donateesService.fetchDonationResponse(encData);
-//      attributes.addAttribute("response", response);
-//      return new RedirectView("http://localhost:8080/donation-response");
-//    }
+    return new RedirectView(redirectURL+"/#/donation-response?"
+        + "merchantTnxId="+response.get("merchantTnxId")
+        + "&bankTnxId="+response.get("bankTnxId")
+        + "&merchantTnxDate="+response.get("merchantTnxDate")
+        + "&merchantId="+response.get("merchantId") 
+        + "&atomTokenId="+response.get("atomTokenId")
+        + "&responseStatusCode="+response.get("responseStatusCode")
+        + "&responseStatusMessage="+response.get("responseStatusMessage")
+        + "&responseStatusDescription="+response.get("responseStatusDescription")); 
+  }
   
-    @RequestMapping(value = "/donation/response", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public RedirectView fetchDonationResponse(String encData, ModelAndView model) throws JsonMappingException, JsonProcessingException{
-      Map<?, ?> response = donateesService.fetchDonationResponse(encData);
-      return new RedirectView(redirectURL+"/#/donation-response?"
-          + "merchantId="+response.get("merchantId") 
-          + "&atomTokenId="+response.get("atomTokenId")
-          + "&merchantTnxId="+response.get("merchantTnxId")
-          + "&merchantTnxDate="+response.get("merchantTnxDate")
-          + "&bankTnxId="+response.get("bankTnxId")
-          + "&responseStatusCode="+response.get("responseStatusCode")
-          + "&responseStatusMessage="+response.get("responseStatusMessage")
-          + "&responseStatusDescription="+response.get("responseStatusDescription")); 
-    }
-    
 }

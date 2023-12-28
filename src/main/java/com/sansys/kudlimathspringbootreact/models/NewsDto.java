@@ -9,20 +9,15 @@
  *
  * @author - Sanjeev
  * @version - 1.0
- * @CreatedOn - 17-Aug-2023 11:25:13 pm
+ * @CreatedOn - 28-Sept-2023 12:07:57 am
  * @Usage - 
  *
  */
 
 package com.sansys.kudlimathspringbootreact.models;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,29 +25,23 @@ import lombok.NoArgsConstructor;
 /**
  * 
  */
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DonateesModel {
+@NoArgsConstructor
+public class NewsDto {
   
   private Long id;
+  private LocalDateTime creationDateTime;
+  private String createdBy;
   
-  @NotBlank
-  private String name;
+  @Size(min = 10, max = 2500)
+  private String title;
   
-  @Pattern(regexp = "(0/91)?[7-9][0-9]{9}")
-  private String mobile;
+  @Size(min = 10, max = 25000)
+  private String description;
   
-  @Email
-  private String email;
+  private String labels;
   
-  @Min(value = 1)
-  @Max(value = 100000)
-  private BigDecimal amount;
   
-  private String atomTokenId;
-  private String merchantTnxId;
-  private LocalDateTime dateTime;
-  private String returnUrl;
-  private String merchantId;
 }

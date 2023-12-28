@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.9405adc4.css",
-    "main.js": "./static/js/main.8f06c622.js",
+    "main.css": "./static/css/main.c40e2e43.css",
+    "main.js": "./static/js/main.9f3404d9.js",
     "static/js/787.6942e7b2.chunk.js": "./static/js/787.6942e7b2.chunk.js",
     "static/media/akshobhyateertharu_vijayastambha.jpg": "./static/media/akshobhyateertharu_vijayastambha.edd3466fdc3a0ee109c8.jpg",
     "static/media/profile.png": "./static/media/profile.4bd9b55ec015933c8929.png",
@@ -41,12 +41,12 @@
     "static/media/akshobhyateertharu.jpg": "./static/media/akshobhyateertharu.dcc875eba1d12b08a90d.jpg",
     "index.html": "./index.html",
     "static/media/logo.svg": "./static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "main.9405adc4.css.map": "./static/css/main.9405adc4.css.map",
-    "main.8f06c622.js.map": "./static/js/main.8f06c622.js.map",
+    "main.c40e2e43.css.map": "./static/css/main.c40e2e43.css.map",
+    "main.9f3404d9.js.map": "./static/js/main.9f3404d9.js.map",
     "787.6942e7b2.chunk.js.map": "./static/js/787.6942e7b2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9405adc4.css",
-    "static/js/main.8f06c622.js"
+    "static/css/main.c40e2e43.css",
+    "static/js/main.9f3404d9.js"
   ]
 }
