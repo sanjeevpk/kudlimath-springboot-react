@@ -17,7 +17,10 @@
 package com.sansys.kudlimathspringbootreact.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 
@@ -29,5 +32,13 @@ public class HomeController {
   @GetMapping("/test")
   public String home() {
     return "index";
+  }
+  
+  // Not implemented yet
+  @PostMapping
+  public String verifyRecaptcha(@RequestBody String recpatchaValue) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.postForEntity("https://www.google.com/recaptcha/api/siteverify", restTemplate, null);
+    return recpatchaValue;
   }
 }

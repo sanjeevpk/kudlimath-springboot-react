@@ -73,6 +73,9 @@ public class DonateesService {
   
   @Autowired
   private DonateesRepository donateesRepository;
+  
+  @Autowired
+  private EmailService emailService;
    
   /**
    * @param donate
@@ -188,8 +191,11 @@ public class DonateesService {
 
     payDetails.setProduct("TRUST");
     CustDetails custDetails = new CustDetails();
+//    custDetails.setCustEmail("sanjeev.pk@gmail.com");
     custDetails.setCustEmail("sanjeev.pk@gmail.com");
-    custDetails.setCustMobile("8217794996");
+//    custDetails.setCustMobile("8217794996");
+    custDetails.setCustMobile(donateModel.getMobile());
+    custDetails.setCustFirstName(donateModel.getName());
 
     HeadDetails headDetails = new HeadDetails();
     headDetails.setApi("AUTH");
@@ -197,11 +203,11 @@ public class DonateesService {
     headDetails.setPlatform("FLASH");
 
     Extras extras = new Extras();
-    extras.setUdf1("");
-    extras.setUdf2("");
-    extras.setUdf3("");
-    extras.setUdf4("");
-    extras.setUdf5("");
+    extras.setUdf1(donateModel.getName());
+    extras.setUdf2(donateModel.getEmail());
+    extras.setUdf3(donateModel.getMobile());
+    extras.setUdf4(""+donateModel.getAmount());
+    extras.setUdf5(donateModel.getMerchantTnxId());
 
     PayInstrument payInstrument = new PayInstrument();
 
@@ -338,6 +344,13 @@ public class DonateesService {
       
       donateesRepository.save(entity); 
       LOG.info("Updated donation payment status to success for merchantId = {}, merchantTnxId = {} ", entity.getMerchantId(), entity.getMerchantTnxId()); 
+      
+      /*
+       * Send the thank you email
+       */
+      LOG.info("Sending thank you email to {} ", entity.getEmail());
+      emailService.sendHtmlEmail(entity);
+      LOG.info("Sent thank you email to {} ", entity.getEmail());
       
     } catch (Exception e) { 
       LOG.debug("Error while updating payment status for merchantId = {}, merchantTnxId = {} ", response.get("merchantId"), response.get("merchantTnxId"), e); 

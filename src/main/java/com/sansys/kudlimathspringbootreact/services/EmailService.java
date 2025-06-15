@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import com.sansys.kudlimathspringbootreact.entities.Donatees;
 import com.sansys.kudlimathspringbootreact.models.Contact;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.AddressException;
@@ -39,45 +40,59 @@ public class EmailService {
     
     private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
 
-    public void sendHtmlEmail(Contact contact) throws MessagingException {
+    public void sendHtmlEmail(Donatees donatees) throws MessagingException {
+      LOG.info("Email initiating");
       MimeMessage message = mailSender.createMimeMessage();
 
-      message.setFrom(new InternetAddress("incarnationpath@gmail.com"));
-      message.setRecipients(MimeMessage.RecipientType.TO, contact.getEmail());
-      message.setSubject("Thank you for your generous contribution");
+      message.setFrom(new InternetAddress("kudlimath@gmail.com"));
+      message.setRecipients(MimeMessage.RecipientType.TO, donatees.getEmail());
+      message.setSubject("Thank you for your generous contributions!");
 
-      String htmlContent = "<h2>Shri Kudali Aarya Akshobhya Teerth Matha<h2>"
-          + "<p>Dear Haribhakta "+contact.getName()+",</p>"
-          
-          + "<p>You’re welcome! We are very grateful for your generous donation to "
-          + "Shri Kudli Aarya Akshobhya Teerth Math. Your contribution will help us "
-          + "to support and inspire to do more sevas.</p>"
-          
-          + "<p>With your donation, you are making a difference in the lives of many Madhva people. "
-          + "You are also helping us to achieve our vision of a world where math is appreciated, "
-          + "for its contributions towards society.</p>"
-          
-          + "<p>We hope you will continue to support us in our mission of spreading Madhva Siddhanta. "
-          + "You can also follow us on our social media channels to stay updated on our latest news, "
-          + "events, and activities. And don’t forget to check out our website for more math resources and opportunities.</p>"
-          
-          + "<p>Thank you again for your kindness and generosity. We hope to hear from you soon. 😊</p>"
-          
-          + "<p>Sincerely,</p>"
-          
-          + "<p>Shri Kudli Aarya Akshobhya Teerth Math</p>"
-          + "<a href=\"https://www.srikudliaryaakshobhyateerthmath.org\" target=\"_blank\" rel=\"noopener noreferrer\">www.srikudliaryaakshobhyateerthmath.org</a> "
-          + "<p>Get in touch with us via below social links</p>\r\n"
-          + "<a href=\"https://www.twitter.com/kudalimath\" target=\"_blank\" rel=\"noopener noreferrer\">Twitter</a></br>  "
-          + "<a href=\"https://www.facebook.com/sriraghuvijayateertharu\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook</a></br>  "
-          + "<a href=\"https://www.instagram.com/sri_aryaakshobhyateerthamath\" target=\"_blank\" rel=\"noopener noreferrer\">Instagram</a></br>  "
-          + "<a href=\"https://www.youtube.com/@srikudliaryaakshobhyateertmath\" target=\"_blank\" rel=\"noopener noreferrer\">Youtube</a>\r\n  "
-          + "<p> &copy; Copyright <strong><span>Shri Kudali Aarya Akshobhya Teerth Matha</span></strong>. All Rights Reserved </p>\r\n"
+      String donorName = donatees.getName();
+      String greetingName = (donorName != null && !donorName.trim().isEmpty()) ? " " + donorName : "";
+      String htmlContent = "<span style=\"color:#4A2C2A;font-size:18px;font-weight:bold;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Dear Haribhakta "+ greetingName  +"</p></span>"
+          + "\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Thank you for your generous contribution to Shree Kudli Aarya Akshobhya Teerth Math. Your support is invaluable and will significantly aid our efforts to continue and expand our sevas.</p></span>\r\n"
+          + "\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Through your donation, you are making a tangible difference in the lives of many Madhva devotees and helping us advance our vision: a world where the Math's profound contributions to society are widely recognized and cherished.</p></span>\r\n"
+          + "\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>We sincerely hope you will continue to support our mission of spreading Madhva Siddhanta. We also offer our prayers to Hari, Vayu, and Gurugalu for your continued good health, joy, abundance, and strength to perform further sevas. We invite you to stay updated on our latest news, events, and activities by following us on our social media channels. For more comprehensive Math information, resources, and opportunities for seva, please visit our website.</p></span>\r\n"
+          + "\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Once again, thank you for your kindness and generosity. We look forward to your continued association.</p></span>\r\n"
+          + "\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-weight:bold;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Sincerely,</p></span>\r\n"
+          + "\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-weight:bold;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Shree Kudli Aarya Akshobhya Teerth Math</p></span>\r\n"
+          + "<a href=\"https://www.kudlimath.in\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#8B4513;font-family:Calibri, Helvetica, Arial, Sans-Serif;font-size:16px;\">www.kudlimath.in</a>\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-weight:bold;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>Connect with us on social media:</p></span>\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<a href=\"https://www.twitter.com/kudlimath\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#8B4513;font-size:16px;\">Twitter</a>\r\n"
+          + "</span><br>\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<a href=\"https://www.facebook.com/sriraghuvijayateertharu\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#8B4513;font-size:16px;\">Facebook</a>\r\n"
+          + "</span><br>\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<a href=\"https://www.instagram.com/sri_aryaakshobhyateerthamath\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#8B4513;font-size:16px;\">Instagram</a>\r\n"
+          + "</span><br>\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:16px;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<a href=\"https://www.youtube.com/@srikudliaryaakshobhyateertmath\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#8B4513;font-size:16px;\">Youtube</a>\r\n"
+          + "</span>\r\n"
+          + "<span style=\"color:#4A2C2A;font-size:14px;font-weight:bold;font-family:Calibri, Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "<p>&copy; Copyright <strong><span>Shree Kudali Aarya Akshobhya Teerth Matha</span></strong>. All Rights Reserved </p></span>\r\n"
           + "";
       
       message.setContent(htmlContent, "text/html; charset=utf-8");
 
       mailSender.send(message);
+      LOG.info("Email sent");
   }
 
     /**
@@ -86,34 +101,47 @@ public class EmailService {
      * @throws AddressException 
      */
     public void sendContactHtmlEmail(Contact contact) throws AddressException, MessagingException {
+      LOG.info("Email initiating");
       MimeMessage message = mailSender.createMimeMessage();
 
-      message.setFrom(new InternetAddress("incarnationpath@gmail.com"));
+      message.setFrom(new InternetAddress("kudlimath@gmail.com"));
       message.setRecipients(MimeMessage.RecipientType.TO, contact.getEmail());
-      message.setSubject("Thank you for contacting Shri Kudali Aarya Akshobhya Teerth Matha");
+      message.setSubject("Thank you for contacting Shree Kudali Aarya Akshobhya Teerth Matha");
 
-      String htmlContent = "<h2>Shri Kudali Aarya Akshobhya Teerth Matha<h2>"
-          + "<p>Dear Haribhakta "+contact.getName()+",</p>"
+      String htmlContent = ""
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<p>Dear Haribhakta "+contact.getName()+",</p></span>"
           
-          + "Thank you for contacing Shri Kudali Aarya Akshobhya Teerth Matha. "
-          + "We have received your message about "+contact.getSubject() +" and will get back to you soon."
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">\r\n"
+          + "Thank you for contacting Shree Kudali Aarya Akshobhya Teerth Matha. "
+          + "We have received your message about "+contact.getSubject() +" and will get back to you soon.</span>"
                     
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
           + "<p>We hope you will continue to support us in our mission of spreading Madhva Siddhanta. "
           + "You can also follow us on our social media channels to stay updated on our latest news, "
-          + "events, and activities. And don’t forget to check out our website for more math resources and opportunities.</p>"
+          + "events, and activities. And don’t forget to check out our website for more math resources and opportunities.</p></span>"
           
-          + "<p>Thank you again for contacting us!</p>"
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<p>Thank you again for contacting us!</p></span>"
           
-          + "<p>Sincerely,</p>"
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<p>Sincerely,</p></span>"
           
-          + "<p>Shri Kudli Aarya Akshobhya Teerth Math</p>"
-          + "<a href=\"https://www.srikudliaryaakshobhyateerthmath.org\" target=\"_blank\" rel=\"noopener noreferrer\">www.srikudliaryaakshobhyateerthmath.org</a> "
-          + "<p>Get in touch with us via below social links</p>\r\n"
-          + "<a href=\"https://www.twitter.com/kudalimath\" target=\"_blank\" rel=\"noopener noreferrer\">Twitter</a></br>  "
-          + "<a href=\"https://www.facebook.com/sriraghuvijayateertharu\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook</a></br>  "
-          + "<a href=\"https://www.instagram.com/sri_aryaakshobhyateerthamath\" target=\"_blank\" rel=\"noopener noreferrer\">Instagram</a></br>  "
-          + "<a href=\"https://www.youtube.com/@srikudliaryaakshobhyateertmath\" target=\"_blank\" rel=\"noopener noreferrer\">Youtube</a>\r\n  "
-          + "<p> &copy; Copyright <strong><span>Shri Kudali Aarya Akshobhya Teerth Matha</span></strong>. All Rights Reserved </p>\r\n"
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<p>Shree Kudli Aarya Akshobhya Teerth Math</p></span>"
+          + "<a href=\"https://www.kudlimath.in\" target=\"_blank\" rel=\"noopener noreferrer\">www.kudlimath.in</a> "
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<p>Get in touch with us via below social links</p></span>\n"
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<a href=\"https://www.twitter.com/kudlimath\" target=\"_blank\" rel=\"noopener noreferrer\">Twitter | </a></span></br>  "
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<a href=\"https://www.facebook.com/sriraghuvijayateertharu\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook | </a></span></br>  "
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<a href=\"https://www.instagram.com/sri_aryaakshobhyateerthamath\" target=\"_blank\" rel=\"noopener noreferrer\">Instagram | </a></span></br>  "
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<a href=\"https://www.youtube.com/@srikudliaryaakshobhyateertmath\" target=\"_blank\" rel=\"noopener noreferrer\">Youtube</a></span>\r\n  "
+          + "<span style=\"color:#613400;font-size:14px;font-weight:bold;font-family:Calibri,Helvetica, Arial, Sans-Serif;\">"
+          + "<p> &copy; Copyright <strong><span>Shree Kudali Aarya Akshobhya Teerth Matha</span></strong>. All Rights Reserved </p></span>\r\n"
           + "";
       
       message.setContent(htmlContent, "text/html; charset=utf-8");
